@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, FormEvent, ChangeEvent } from "react";
-import styles from "./AttendanceForm.module.css";
+import styles from "./page.module.css";
 
 export default function AttendancePage() {
   const [name, setName] = useState("");
@@ -23,7 +23,7 @@ export default function AttendancePage() {
 
     setStatus("loading");
     setError(null);
-    setSubmittedName(name.trim().split(" ")[0]); // Store first name for success message
+    setSubmittedName(name.trim().split(" ")[0]);
 
     try {
       const response = await fetch("/api/attendance", {
@@ -53,82 +53,99 @@ export default function AttendancePage() {
     setSubmittedName("");
   };
   
-  // Success View
   if (status === "success") {
     return (
       <main className={styles.pageWrapper}>
-        <div className={`${styles.contentWrapper} ${styles.fadeIn}`}>
-          <div className={styles.successContent}>
-            <span role="img" aria-label="celebration" className={styles.emoji}>
-              🎉
-            </span>
-            <h2>Thank you, {submittedName}!</h2>
-            <p>Your attendance has been recorded.</p>
-            <button
-              className={styles.submitAnotherButton}
-              onClick={handleReset}
-            >
-              Submit Another
-            </button>
+        <div className={`${styles.successContainer} ${styles.fadeIn}`}>
+          <div className={styles.successIcon}>
+            <svg viewBox="0 0 24 24" fill="none" className={styles.checkmark}>
+              <path 
+                d="M20 6L9 17L4 12" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              />
+            </svg>
           </div>
+          <h2 className={styles.successTitle}>Welcome, {submittedName}</h2>
+          <p className={styles.successText}>Your attendance has been recorded</p>
+          <button
+            className={styles.newEntryButton}
+            onClick={handleReset}
+          >
+            New Entry
+          </button>
         </div>
       </main>
     );
   }
 
-  // Input Form View
   return (
     <main className={styles.pageWrapper}>
-        <div className={styles.contentWrapper}>
-            <div className={styles.header}>
-                <h1>Attendance</h1>
-                <p>Please enter your details to sign in.</p>
+      <div className={styles.container}>
+        <div className={styles.card}>
+          <div className={styles.header}>
+            <h1 className={styles.title}>SAE Attendance</h1>
+            <p className={styles.subtitle}>Please enter your details.</p>
+          </div>
+          
+          <form onSubmit={handleSubmit} className={styles.form} noValidate>
+            <div className={styles.inputGroup}>
+              <label htmlFor="name" className={styles.label}>Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                className={styles.input}
+                value={name}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                required
+                autoComplete="name"
+              />
             </div>
-            
-            <form onSubmit={handleSubmit} className={styles.form} noValidate>
-                <div className={styles.inputGroup}>
-                    <label htmlFor="name">Full Name</label>
-                    <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    placeholder="Jane Doe"
-                    value={name}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-                    required
-                    />
-                </div>
-    
-                <div className={styles.inputGroup}>
-                    <label htmlFor="email">Email</label>
-                    <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="jane.doe@example.com"
-                    value={email}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                    required
-                    />
-                </div>
-    
-                {status === "error" && (
-                    <p className={`${styles.errorMessage} ${styles.shake}`}>{error}</p>
-                )}
-    
-                <button
-                    type="submit"
-                    className={styles.submitButton}
-                    disabled={!isFormValid() || status === "loading"}
-                >
-                    {status === "loading" ? "Submitting..." : "Submit"}
-                </button>
-            </form>
+
+            <div className={styles.inputGroup}>
+              <label htmlFor="email" className={styles.label}>Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                className={styles.input}
+                value={email}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                required
+                autoComplete="email"
+              />
+            </div>
+
+            {status === "error" && (
+              <div className={styles.errorMessage}>
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={!isFormValid() || status === "loading"}
+            >
+              {status === "loading" ? (
+                <span className={styles.loadingState}>
+                  <span className={styles.spinner}></span>
+                  Processing
+                </span>
+              ) : (
+                "Continue"
+              )}
+            </button>
+          </form>
         </div>
-        <p className={styles.footerText}>
-            Built with passion.
+        
+        <p className={styles.footer}>
+          TAMU Formula Electric Software
         </p>
+      </div>
     </main>
   );
 }
-
