@@ -56,6 +56,12 @@ export default function AttendancePage() {
   if (status === "success") {
     return (
       <main className={styles.pageWrapper}>
+        <header className={styles.pageHeader}>
+          <a href="https://www.tamusae.org/" target="_blank" rel="noopener noreferrer" className={styles.logoLink}>
+            <span className={styles.logoText}>TAMU SAE</span>
+          </a>
+        </header>
+
         <div className={`${styles.successContainer} ${styles.fadeIn}`}>
           <div className={styles.successIcon}>
             <svg viewBox="0 0 24 24" fill="none" className={styles.checkmark}>
@@ -68,8 +74,15 @@ export default function AttendancePage() {
               />
             </svg>
           </div>
-          <h2 className={styles.successTitle}>Welcome, {submittedName}</h2>
-          <p className={styles.successText}>Your attendance has been recorded</p>
+          <h2>Welcome, {submittedName
+            .split(" ")
+            .map(
+              (part) =>
+                part.charAt(0).toUpperCase() + part.slice(1).toLowerCase()
+            )
+            .join(" ")
+          }!</h2>
+          <p className={styles.successText}>Your attendance has been recorded.</p>
           <button
             className={styles.newEntryButton}
             onClick={handleReset}
@@ -77,17 +90,27 @@ export default function AttendancePage() {
             New Entry
           </button>
         </div>
+
+        <footer className={styles.pageFooter}>
+          <p className={styles.footerText}>Formula Electric • Software Division</p>
+        </footer>
       </main>
     );
   }
 
   return (
     <main className={styles.pageWrapper}>
+      <header className={styles.pageHeader}>
+        <a href="https://www.tamusae.org/" target="_blank" rel="noopener noreferrer" className={styles.logoLink}>
+          <span className={styles.logoText}>TAMU SAE</span>
+        </a>
+      </header>
+
       <div className={styles.container}>
         <div className={styles.card}>
           <div className={styles.header}>
-            <h1 className={styles.title}>SAE Attendance</h1>
-            <p className={styles.subtitle}>Please enter your details.</p>
+            <h1 className={styles.title}>Attendance</h1>
+            <p className={styles.subtitle}>Sign in with your details.</p>
           </div>
           
           <form onSubmit={handleSubmit} className={styles.form} noValidate>
@@ -141,11 +164,11 @@ export default function AttendancePage() {
             </button>
           </form>
         </div>
-        
-        <p className={styles.footer}>
-          TAMU Formula Electric Software
-        </p>
       </div>
+
+      <footer className={styles.pageFooter}>
+        <p className={styles.footerText}>TAMU Formula Electric • Software Subteam</p>
+      </footer>
     </main>
   );
 }
